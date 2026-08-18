@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-paper: #eef2f6;
+  --color-paper-card: #ffffff;
+  --color-paper-dark: #141a22;
+  --color-paper-card-dark: #1c2531;
+
+  --color-ink: #1f2a37;
+  --color-ink-soft: #5b6675;
+  --color-ink-dark: #e7ecf2;
+  --color-ink-soft-dark: #93a1b3;
+
+  --color-rule: #d7dee6;
+  --color-rule-dark: #2b3644;
+
+  --color-tab-todo: #e8604c;
+  --color-tab-notes: #f0b429;
+  --color-tab-reminder: #2f9e8f;
+
+  --color-success: #6b9080;
+  --color-danger: #d64545;
+
+  /* Fonts */
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  /* Shadows */
+  --shadow-card:
+    0 1px 2px rgba(31, 42, 55, 0.06),
+    0 4px 10px rgba(31, 42, 55, 0.06);
+
+  --shadow-tab:
+    0 2px 6px rgba(31, 42, 55, 0.14);
+
+  /* Border radius */
+  --radius-card: 14px;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper dark:bg-paper-dark text-ink dark:text-ink-dark font-body antialiased;
+
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink dark:text-ink-dark;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #2f9e8f;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: #f0b42955;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .ruled-bg {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 35px,
+      rgba(31, 42, 55, 0.045) 35px,
+      rgba(31, 42, 55, 0.045) 36px
+    );
+  }
+
+  .dark .ruled-bg {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 35px,
+      rgba(231, 236, 242, 0.045) 35px,
+      rgba(231, 236, 242, 0.045) 36px
+    );
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--color-rule);
+    border-radius: 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
