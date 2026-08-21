@@ -1,9 +1,9 @@
 {
-  "name": "todo-notes-reminder",
+  "name": "teamflow-client",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "A simple productivity app for tasks, notes and reminders — built with React, Tailwind CSS and localStorage persistence.",
+  "description": "TeamFlow — Smart productivity workspace for tasks, notes and reminders built with React, Tailwind CSS and MongoDB / localStorage persistence.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -5,6 +5,7 @@ import { useToast } from "../../context/ToastContext";
 import NoteForm from "../../components/Notes/NoteForm";
 import NoteItem from "../../components/Notes/NoteItem";
 import DuplicateNoteDialog from "../../components/DuplicateNoteDialog";
+import DashboardHeader from "../../components/DashboardHeader";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState([]);
@@ -83,19 +84,23 @@ export default function NotesPage() {
   }, [notes, query]);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-6 pb-12">
+      <DashboardHeader />
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold sm:text-3xl">Notes</h1>
-          <p className="mt-1 text-sm text-ink-soft dark:text-ink-soft-dark">
+          <h2 className="text-lg font-bold text-ink dark:text-ink-dark sm:text-xl">
+            Notes Vault
+          </h2>
+          <p className="text-xs text-ink-soft dark:text-ink-soft-dark">
             {notes.length === 0
-              ? "No notes yet."
-              : `${notes.length} note${notes.length === 1 ? "" : "s"} kept.`}
+              ? "No notes kept yet."
+              : `${notes.length} note${notes.length === 1 ? "" : "s"} kept in your vault.`}
           </p>
         </div>
         <div className="relative sm:w-64">
           <Search
-            size={15}
+            size={14}
             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft dark:text-ink-soft-dark"
           />
           <input
@@ -103,7 +108,7 @@ export default function NotesPage() {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search notes..."
-            className="w-full rounded-lg border border-rule bg-paper-card py-2 pl-8 pr-3 text-sm text-ink outline-none placeholder:text-ink-soft/70 dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark"
+            className="w-full rounded-xl border border-rule bg-paper-card py-2 pl-8 pr-3 text-xs text-ink outline-none placeholder:text-ink-soft/60 focus:border-tab-notes dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark shadow-xs"
           />
         </div>
       </div>

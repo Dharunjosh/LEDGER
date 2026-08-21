@@ -28,7 +28,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({
-    name: "Ledger API",
+    name: "TeamFlow API",
     status: "ok",
     message: "Frontend should call the backend directly through the API URL.",
   });

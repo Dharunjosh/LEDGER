@@ -61,8 +61,26 @@ export default function GlobalSearch() {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} className="hidden w-full items-center gap-2 rounded-lg border border-rule bg-paper px-3 py-2 text-left text-xs text-ink-soft hover:bg-paper-card dark:border-rule-dark dark:bg-paper-dark dark:text-ink-soft-dark sm:flex" aria-label="Search everything">
-        <Search size={15} /> <span className="flex-1">Search everything…</span><kbd className="font-mono text-[10px]">Ctrl K</kbd>
+      {/* Desktop search bar */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="hidden w-full items-center gap-2 rounded-xl border border-rule bg-paper-card px-3 py-2 text-left text-xs text-ink-soft hover:border-tab-reminder hover:text-ink dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-soft-dark dark:hover:text-ink-dark sm:flex shadow-sm transition-all"
+        aria-label="Search everything"
+      >
+        <Search size={14} className="text-ink-soft" />
+        <span className="flex-1">Search tasks, notes, reminders…</span>
+        <kbd className="font-mono text-[10px] bg-paper dark:bg-paper-dark px-1.5 py-0.5 rounded border border-rule dark:border-rule-dark">Ctrl K</kbd>
+      </button>
+
+      {/* Mobile search icon button */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-rule bg-paper-card text-ink transition-colors hover:bg-paper dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark dark:hover:bg-paper-dark sm:hidden shadow-sm"
+        aria-label="Search everything"
+      >
+        <Search size={16} />
       </button>
       {open && <div className="fixed inset-0 z-[60] flex items-start justify-center bg-ink/35 px-4 pt-20" onMouseDown={() => setOpen(false)}>
         <section className="w-full max-w-xl overflow-hidden rounded-card border border-rule bg-paper-card shadow-card dark:border-rule-dark dark:bg-paper-card-dark" onMouseDown={(event) => event.stopPropagation()} aria-label="Global search">

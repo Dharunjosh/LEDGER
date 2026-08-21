@@ -9,6 +9,8 @@ const todoSchema = new mongoose.Schema(
     dueDate: { type: String, default: null },
     completed: { type: Boolean, default: false },
     highlighted: { type: Boolean, default: false },
+    isLocked: { type: Boolean, default: false },
+    subtasks: { type: Array, default: [] },
   },
   { timestamps: true }
 );

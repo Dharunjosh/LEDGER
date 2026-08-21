@@ -61,14 +61,19 @@ export default function TrashPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold sm:text-3xl">Recycle bin</h1>
           <p className="mt-1 text-sm text-ink-soft dark:text-ink-soft-dark">Deleted items stay here until you permanently remove them.</p>
         </div>
         {trash.length > 0 && (
-          <button onClick={emptyBin} className="text-sm text-danger hover:underline">
-            Empty bin
+          <button
+            type="button"
+            onClick={emptyBin}
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-danger/40 bg-danger/10 px-3.5 py-2 text-xs font-bold text-danger hover:bg-danger hover:text-white transition-all shadow-xs active:scale-95 self-start sm:self-auto"
+          >
+            <Trash2 size={14} />
+            <span>Empty Recycle Bin</span>
           </button>
         )}
       </div>

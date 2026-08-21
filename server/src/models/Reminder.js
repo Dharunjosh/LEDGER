@@ -7,6 +7,7 @@ const reminderSchema = new mongoose.Schema(
     date: { type: String, required: true },
     time: { type: String, default: '' },
     highlighted: { type: Boolean, default: false },
+    isLocked: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

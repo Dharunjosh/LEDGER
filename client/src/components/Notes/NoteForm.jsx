@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { Plus, Save, X } from "lucide-react";
+import { Plus, Save, X, Pipette, Palette } from "lucide-react";
 import Button from "../Button/Button";
 
 export const NOTE_COLORS = [
-  { name: "Amber", value: "amber", className: "bg-tab-notes" },
-  { name: "Teal", value: "teal", className: "bg-tab-reminder" },
-  { name: "Coral", value: "coral", className: "bg-tab-todo" },
-  { name: "Slate", value: "slate", className: "bg-ink-soft" },
+  { name: "Amber", value: "amber", bg: "bg-amber-400" },
+  { name: "Emerald", value: "emerald", bg: "bg-emerald-400" },
+  { name: "Sky", value: "sky", bg: "bg-sky-400" },
+  { name: "Purple", value: "purple", bg: "bg-purple-400" },
+  { name: "Rose", value: "rose", bg: "bg-rose-400" },
+  { name: "Teal", value: "teal", bg: "bg-teal-400" },
+  { name: "Coral", value: "coral", bg: "bg-orange-400" },
+  { name: "Slate", value: "slate", bg: "bg-slate-400" },
 ];
 
 const emptyDraft = { title: "", content: "", color: "amber" };
@@ -30,11 +34,12 @@ export default function NoteForm({ initialNote, onSubmit, onCancel }) {
   }
 
   const isEditing = Boolean(initialNote);
+  const isCustomHex = draft.color?.startsWith("#");
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-card border border-rule bg-paper-card p-4 shadow-card dark:border-rule-dark dark:bg-paper-card-dark"
+      className="flex flex-col gap-3.5 rounded-2xl border border-rule bg-paper-card p-4 sm:p-5 shadow-card dark:border-rule-dark dark:bg-paper-card-dark transition-all"
     >
       <input
         autoFocus
@@ -43,20 +48,21 @@ export default function NoteForm({ initialNote, onSubmit, onCancel }) {
         onChange={(event) =>
           setDraft((current) => ({ ...current, title: event.target.value }))
         }
-        placeholder="Note title"
-        className="rounded-lg border border-rule bg-transparent px-3 py-2 text-sm font-medium text-ink outline-none placeholder:text-ink-soft/70 dark:border-rule-dark dark:text-ink-dark"
+        placeholder="Note title..."
+        className="rounded-xl border border-rule bg-transparent px-3 py-2.5 text-sm font-semibold text-ink outline-none placeholder:text-ink-soft/60 focus:border-tab-notes dark:border-rule-dark dark:text-ink-dark transition-colors"
       />
       <textarea
         value={draft.content}
         onChange={(event) =>
           setDraft((current) => ({ ...current, content: event.target.value }))
         }
-        placeholder="Write it down..."
-        rows={5}
-        className="resize-y rounded-lg border border-rule bg-transparent px-3 py-2 text-sm text-ink outline-none placeholder:text-ink-soft/70 dark:border-rule-dark dark:text-ink-dark"
+        placeholder="Write your note here..."
+        rows={4}
+        className="resize-y rounded-xl border border-rule bg-transparent px-3 py-2.5 text-sm text-ink outline-none placeholder:text-ink-soft/60 focus:border-tab-notes dark:border-rule-dark dark:text-ink-dark transition-colors"
       />
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2" aria-label="Note color">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+        {/* Color Palette Selector with Custom Color Picker */}
+        <div className="flex flex-wrap items-center gap-1.5" aria-label="Note color">
           {NOTE_COLORS.map((color) => (
             <button
               key={color.value}
@@ -66,15 +72,36 @@ export default function NoteForm({ initialNote, onSubmit, onCancel }) {
               onClick={() =>
                 setDraft((current) => ({ ...current, color: color.value }))
               }
-              className={`h-5 w-5 rounded-full border border-transparent transition-all ${color.className} ${
+              className={`h-5 w-5 rounded-full transition-all ${color.bg} ${
                 draft.color === color.value
-                  ? "scale-110 border-ink shadow-sm ring-2 ring-ink/40 ring-offset-2 ring-offset-paper dark:border-ink-dark dark:ring-ink-dark/40 dark:ring-offset-paper-card-dark"
-                  : "hover:scale-110 hover:border-ink/40"
+                  ? "scale-125 ring-2 ring-ink ring-offset-2 ring-offset-paper dark:ring-white dark:ring-offset-paper-card-dark"
+                  : "hover:scale-110 opacity-80 hover:opacity-100"
               }`}
+              title={`${color.name} color`}
             />
           ))}
+
+          {/* Custom Hex Color Picker */}
+          <label
+            className={`relative flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-rule bg-gradient-to-tr from-amber-400 via-rose-400 to-sky-400 transition-all ${
+              isCustomHex
+                ? "scale-125 ring-2 ring-ink ring-offset-2 ring-offset-paper dark:ring-white dark:ring-offset-paper-card-dark"
+                : "hover:scale-110"
+            }`}
+            title="Choose custom color"
+          >
+            <input
+              type="color"
+              value={isCustomHex ? draft.color : "#8b5cf6"}
+              onChange={(e) => setDraft((curr) => ({ ...curr, color: e.target.value }))}
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+              aria-label="Custom color picker"
+            />
+            <Pipette size={11} className="text-white drop-shadow-sm pointer-events-none" />
+          </label>
         </div>
-        <div className="flex gap-2">
+
+        <div className="flex items-center gap-2">
           {isEditing && (
             <Button
               type="button"
@@ -87,7 +114,7 @@ export default function NoteForm({ initialNote, onSubmit, onCancel }) {
           )}
           <Button type="submit" size="sm">
             {isEditing ? <Save size={15} /> : <Plus size={15} />}
-            {isEditing ? "Save changes" : "Add note"}
+            {isEditing ? "Save changes" : "Add"}
           </Button>
         </div>
       </div>

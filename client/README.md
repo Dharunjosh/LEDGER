@@ -1,4 +1,4 @@
-# Ledger — To-Do, Notes & Reminder App
+# TeamFlow — To-Do, Notes & Reminder App
 
 A simple, responsive productivity app built with React. Organize tasks, notes and
 reminders in one place, styled like a color-coded desk-organizer / index-card

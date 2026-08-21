@@ -1,9 +1,9 @@
 {
-  "name": "ledger-server",
+  "name": "teamflow-server",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Backend API for the Ledger app — Node.js, Express, MongoDB (Mongoose), JWT auth.",
+  "description": "Backend API for TeamFlow app — Node.js, Express, MongoDB (Mongoose), JWT auth.",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",

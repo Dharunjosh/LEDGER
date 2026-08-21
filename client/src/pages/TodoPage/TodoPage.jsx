@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { Search, ChevronDown, SlidersHorizontal } from "lucide-react";
 import { api } from "../../utils/api";
 import { useToast } from "../../context/ToastContext";
 import TodoForm, { DEFAULT_CATEGORIES } from "../../components/Todo/TodoForm";
 import TodoItem from "../../components/Todo/TodoItem";
+import DashboardHeader from "../../components/DashboardHeader";
+import { playTaskDoneSound } from "../../utils/sound";
 
 const FILTERS = ["All", "Pending", "Completed", "Highlighted"];
 const SORTS = [
@@ -57,7 +59,12 @@ export default function TodoPage() {
 
   function handleToggle(id) {
     const task = todos.find((t) => t.id === id);
-    if (task) handleUpdate(id, { completed: !task.completed });
+    if (task) {
+      if (!task.completed) {
+        playTaskDoneSound();
+      }
+      handleUpdate(id, { completed: !task.completed });
+    }
   }
 
   function handleToggleHighlight(id) {
@@ -122,75 +129,80 @@ export default function TodoPage() {
   }, [todos, filter, query, sortBy]);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold sm:text-3xl">Tasks</h1>
-        <p className="mt-1 text-sm text-ink-soft dark:text-ink-soft-dark">
-          {todos.length === 0
-            ? "Nothing on the list yet."
-            : `${todos.filter((t) => !t.completed).length} of ${todos.length} still pending.`}
-        </p>
-      </div>
+    <div className="flex flex-col gap-6 pb-12">
+      <DashboardHeader />
 
       <TodoForm categories={categories} onSubmit={handleAdd} />
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-2 md:flex-row md:items-center">
-          <div className="flex rounded-lg border border-rule bg-paper-card p-1 dark:border-rule-dark dark:bg-paper-card-dark">
-            {FILTERS.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setFilter(option)}
-                className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  filter === option
-                    ? "bg-ink text-white dark:bg-tab-reminder dark:text-paper-dark"
-                    : "text-ink-soft hover:text-ink dark:text-ink-soft-dark dark:hover:text-ink-dark"
-                }`}
+      <div className="flex flex-col gap-3">
+        {/* Filter pills, Category selector, Search, and Sort row */}
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex rounded-xl border border-rule bg-paper-card p-1 shadow-xs dark:border-rule-dark dark:bg-paper-card-dark max-w-full overflow-x-auto scrollbar-thin">
+              {FILTERS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setFilter(option)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all whitespace-nowrap ${
+                    filter === option
+                      ? "bg-tab-todo text-white shadow-xs"
+                      : "text-ink-soft hover:text-ink dark:text-ink-soft-dark dark:hover:text-ink-dark"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+
+            {/* Custom Category Dropdown */}
+            <div className="relative inline-flex items-center">
+              <select
+                value={categoryFilter}
+                onChange={(event) => setCategoryFilter(event.target.value)}
+                className="appearance-none rounded-xl border border-rule bg-paper-card pl-3 pr-8 py-2 text-xs font-semibold text-ink outline-none shadow-xs hover:border-tab-todo focus:border-tab-todo dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark cursor-pointer transition-colors"
               >
-                {option}
-              </button>
-            ))}
+                {["All", ...categories].map((category) => (
+                  <option key={category} value={category} className="bg-paper-card dark:bg-paper-card-dark text-ink dark:text-ink-dark">
+                    {category === "All" ? "🏷️ All Categories" : `🏷️ ${category}`}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={14} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-soft dark:text-ink-soft-dark" />
+            </div>
           </div>
 
-          <select
-            value={categoryFilter}
-            onChange={(event) => setCategoryFilter(event.target.value)}
-            className="rounded-lg border border-rule bg-paper-card px-3 py-2 text-sm text-ink outline-none dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark dark:[color-scheme:dark]"
-          >
-            {["All", ...categories].map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative flex-1 min-w-[180px] sm:w-56 sm:flex-initial">
+              <Search
+                size={14}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft dark:text-ink-soft-dark"
+              />
+              <input
+                type="text"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search tasks..."
+                className="w-full rounded-xl border border-rule bg-paper-card py-2 pl-8 pr-3 text-xs text-ink outline-none shadow-xs placeholder:text-ink-soft/60 focus:border-tab-todo dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark transition-colors"
+              />
+            </div>
 
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <div className="relative">
-            <Search
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft dark:text-ink-soft-dark"
-            />
-            <input
-              type="text"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search tasks..."
-              className="w-full rounded-lg border border-rule bg-paper-card py-2 pl-8 pr-3 text-sm text-ink outline-none placeholder:text-ink-soft/70 dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark sm:w-56"
-            />
+            {/* Custom Sort Dropdown */}
+            <div className="relative inline-flex items-center">
+              <select
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value)}
+                className="appearance-none rounded-xl border border-rule bg-paper-card pl-3 pr-8 py-2 text-xs font-semibold text-ink outline-none shadow-xs hover:border-tab-todo focus:border-tab-todo dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark cursor-pointer transition-colors"
+              >
+                {SORTS.map((sort) => (
+                  <option key={sort.value} value={sort.value} className="bg-paper-card dark:bg-paper-card-dark text-ink dark:text-ink-dark">
+                    ⚡ {sort.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={14} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-soft dark:text-ink-soft-dark" />
+            </div>
           </div>
-          <select
-            value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
-            className="rounded-lg border border-rule bg-paper-card px-3 py-2 text-sm text-ink outline-none dark:border-rule-dark dark:bg-paper-card-dark dark:text-ink-dark dark:[color-scheme:dark]"
-          >
-            {SORTS.map((sort) => (
-              <option key={sort.value} value={sort.value}>
-                {sort.label}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
 
